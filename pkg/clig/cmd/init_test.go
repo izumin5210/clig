@@ -95,6 +95,31 @@ func TestInit(t *testing.T) {
 				return cmd, nil
 			},
 		},
+		{
+			test: "skip viper",
+			args: []string{"foobar", "--skip-viper"},
+			files: []string{
+				"foobar/.gitignore",
+				"foobar/.reviewdog.yml",
+				"foobar/.travis.yml",
+				"foobar/Makefile",
+				"foobar/cmd/foobar/main.go",
+				"foobar/pkg/foobar/context.go",
+				"foobar/pkg/foobar/cmd/cmd.go",
+			},
+			excmds: []*exectesting.FakeCmd{
+				createFakeCmd("dep", "init"),
+				createFakeCmd("gex",
+					"--add", "github.com/mitchellh/gox",
+					"--add", "github.com/haya14busa/reviewdog/cmd/reviewdog",
+					"--add", "github.com/kisielk/errcheck",
+					"--add", "github.com/srvc/wraperr/cmd/wraperr",
+					"--add", "golang.org/x/lint/golint",
+					"--add", "honnef.co/go/tools/cmd/megacheck",
+					"--add", "mvdan.cc/unparam",
+				),
+			},
+		},
 	}
 
 	for _, tc := range cases {

@@ -22,6 +22,10 @@ var (
 )
 
 func newInitCommand(c *clig.Ctx) *cobra.Command {
+	var (
+		skipViper bool
+	)
+
 	cmd := &cobra.Command{
 		Use:  "init",
 		Args: cobra.ExactArgs(1),
@@ -34,9 +38,10 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 			}
 
 			params := struct {
-				Name    string
-				Package string
-			}{Name: name, Package: pkg}
+				Name         string
+				Package      string
+				ViperEnabled bool
+			}{Name: name, Package: pkg, ViperEnabled: !skipViper}
 
 			entries := []*entry{
 				{Path: root.Join(".gitignore").String(), Template: templateGitignore},
@@ -44,12 +49,15 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 				{Path: root.Join(".travis.yml").String(), Template: templateTravis},
 				{Path: root.Join("Makefile").String(), Template: templateMakefile},
 				{Path: root.Join("cmd", params.Name, "main.go").String(), Template: templateMain},
-				{Path: root.Join("pkg", params.Name, "config.go").String(), Template: templateConfig},
+				{Path: root.Join("pkg", params.Name, "config.go").String(), Template: templateConfig, Skipped: skipViper},
 				{Path: root.Join("pkg", params.Name, "context.go").String(), Template: templateCtx},
 				{Path: root.Join("pkg", params.Name, "cmd", "cmd.go").String(), Template: templateCmd},
 			}
 
 			for _, e := range entries {
+				if e.Skipped {
+					continue
+				}
 				err = e.Create(c.FS, params)
 				if err != nil {
 					return err
@@ -104,6 +112,8 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVar(&skipViper, "skip-viper", false, "Do not use viper")
+
 	return cmd
 }
 
@@ -125,6 +135,7 @@ func getImportPath(rootPath string) (importPath string, err error) {
 type entry struct {
 	Template *template.Template
 	Path     string
+	Skipped  bool
 }
 
 func (e *entry) Create(fs afero.Fs, params interface{}) error {
@@ -209,7 +220,9 @@ import (
 	"github.com/izumin5210/clig/pkg/cli"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
+	{{- if .ViperEnabled}}
 	"github.com/spf13/viper"
+	{{- end}}
 	"go.uber.org/zap"
 	"k8s.io/utils/exec"
 )
@@ -218,7 +231,9 @@ type Ctx struct {
 	WorkingDir cli.Path
 	IO         cli.IO
 	FS         afero.Fs
+	{{- if .ViperEnabled}}
 	Viper      *afero.Viper
+	{{- end}}
 	Exec       exec.Interface
 
 	Build  cli.Build
@@ -226,6 +241,7 @@ type Ctx struct {
 }
 
 func (c *Ctx) Init() error {
+	{{- if .ViperEnabled}}
 	c.Viper.SetFs(c.FS)
 
 	var err error
@@ -235,8 +251,11 @@ func (c *Ctx) Init() error {
 		return errors.WithStack(err)
 	}
 
+	{{- end}}
+
 	return nil
 }
+{{- if .ViperEnabled}}
 
 func (c *Ctx) loadConfig() error {
 	c.Viper.SetConfigName(c.Build.AppName)
@@ -255,6 +274,7 @@ func (c *Ctx) loadConfig() error {
 
 	return nil
 }
+{{- end}}
 `)
 	templateConfig = mustCreateTemplate("config", `package {{.Name}}
 
@@ -267,7 +287,9 @@ import (
 	"github.com/izumin5210/clig/pkg/cli"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	{{- if .ViperEnabled}}
 	"github.com/spf13/viper"
+	{{- end}}
 	"k8s.io/utils/exec"
 
 	"{{.Package}}/pkg/{{.Name}}"
@@ -278,7 +300,9 @@ func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Com
 		WorkingDir: wd,
 		IO:         cli.Stdio(),
 		FS:         afero.NewOsFs(),
+		{{- if .ViperEnabled}}
 		Viper:      viper.New(),
+		{{- end}}
 		Exec:       exec.Interface(),
 		Build:      build,
 	})
