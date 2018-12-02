@@ -2,6 +2,22 @@
 
 
 [[projects]]
+  digest = "1:5d7ed16e3359fcc983d93b17126d26ffbc4056ff509d34ef030fc3345ecc5616"
+  name = "github.com/bradleyjkemp/cupaloy"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "29f58f1e4393a0062f60596ee97bfec34a25cd5f"
+  version = "v2.3.0"
+
+[[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  pruneopts = "UT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
   digest = "1:97df918963298c287643883209a2c3f642e6593379f97ab400c2a2e219ab647d"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
@@ -137,6 +153,14 @@
   pruneopts = "UT"
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
+
+[[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  pruneopts = "UT"
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:6a4a11ba764a56d2758899ec6f3848d24698d48442ebce85ee7a3f63284526cd"
@@ -367,6 +391,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/bradleyjkemp/cupaloy",
     "github.com/haya14busa/reviewdog/cmd/reviewdog",
     "github.com/iancoleman/strcase",
     "github.com/kisielk/errcheck",

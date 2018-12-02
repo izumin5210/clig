@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"go/build"
-	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -25,14 +24,9 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 		Use:  "init",
 		Args: cobra.ExactArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
-			wd, err := os.Getwd()
-			if err != nil {
-				return err
-			}
-
 			name := args[0]
-			root := filepath.Join(wd, name)
-			pkg, err := getImportPath(root)
+			root := c.WorkingDir.Join(name)
+			pkg, err := getImportPath(root.String())
 			if err != nil {
 				return err
 			}
@@ -43,9 +37,9 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 			}{Name: name, Package: pkg}
 
 			entries := []*entry{
-				{Path: filepath.Join(root, "cmd", params.Name, "main.go"), Template: templateMain},
-				{Path: filepath.Join(root, "pkg", params.Name, "context.go"), Template: templateCtx},
-				{Path: filepath.Join(root, "pkg", params.Name, "cmd", "cmd.go"), Template: templateCmd},
+				{Path: root.Join("cmd", params.Name, "main.go").String(), Template: templateMain},
+				{Path: root.Join("pkg", params.Name, "context.go").String(), Template: templateCtx},
+				{Path: root.Join("pkg", params.Name, "cmd", "cmd.go").String(), Template: templateCmd},
 			}
 
 			for _, e := range entries {
@@ -141,7 +135,12 @@ func main() {
 }
 
 func run() error {
-	cmd := cmd.NewDefault{{ToCamel .Name}}Command(cli.Build{
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	cmd := cmd.NewDefault{{ToCamel .Name}}Command(cli.Path(wd), cli.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,
@@ -158,7 +157,8 @@ import (
 )
 
 type Ctx struct {
-	IO cli.IO
+	WorkingDir cli.Path
+	IO         cli.IO
 
 	Build cli.Build
 }
@@ -172,10 +172,11 @@ import (
 	"{{.Package}}/pkg/{{.Name}}"
 )
 
-func NewDefault{{ToCamel .Name}}Command(build cli.Build) *cobra.Command {
+func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Command {
 	return New{{ToCamel .Name}}Command(&{{.Name}}.Ctx{
-		IO:    cli.Stdio(),
-		Build: build,
+		WorkingDir: wd,
+		IO:         cli.Stdio(),
+		Build:      build,
 	})
 }
 
