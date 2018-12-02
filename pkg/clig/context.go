@@ -7,8 +7,9 @@ import (
 )
 
 type Ctx struct {
-	IO cli.IO
-	FS afero.Fs
+	WorkingDir cli.Path
+	IO         cli.IO
+	FS         afero.Fs
 
 	Build cli.Build
 }

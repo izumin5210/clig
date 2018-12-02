@@ -5,12 +5,13 @@ import (
 	"os"
 
 	"github.com/izumin5210/clig/pkg/cli"
-	"github.com/izumin5210/clig/pkg/clig/cmd"
+
+	"go.example.com/foobar/pkg/foobar/cmd"
 )
 
 const (
-	appName = "clig"
-	version = "v0.1.0"
+	appName = "foobar"
+	version = "v0.0.1"
 )
 
 var (
@@ -25,12 +26,7 @@ func main() {
 }
 
 func run() error {
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	cmd := cmd.NewDefaultCligCommand(cli.Path(wd), cli.Build{
+	cmd := cmd.NewDefaultFoobarCommand(cli.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,
@@ -39,3 +35,4 @@ func run() error {
 
 	return cmd.Execute()
 }
+

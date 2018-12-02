@@ -8,11 +8,12 @@ import (
 	"github.com/izumin5210/clig/pkg/clig"
 )
 
-func NewDefaultCligCommand(build cli.Build) *cobra.Command {
+func NewDefaultCligCommand(wd cli.Path, build cli.Build) *cobra.Command {
 	return NewCligCommand(&clig.Ctx{
-		IO:    cli.Stdio(),
-		FS:    afero.NewOsFs(),
-		Build: build,
+		WorkingDir: wd,
+		IO:         cli.Stdio(),
+		FS:         afero.NewOsFs(),
+		Build:      build,
 	})
 }
 
