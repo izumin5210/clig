@@ -44,6 +44,7 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 				{Path: root.Join(".travis.yml").String(), Template: templateTravis},
 				{Path: root.Join("Makefile").String(), Template: templateMakefile},
 				{Path: root.Join("cmd", params.Name, "main.go").String(), Template: templateMain},
+				{Path: root.Join("pkg", params.Name, "config.go").String(), Template: templateConfig},
 				{Path: root.Join("pkg", params.Name, "context.go").String(), Template: templateCtx},
 				{Path: root.Join("pkg", params.Name, "cmd", "cmd.go").String(), Template: templateCmd},
 			}
@@ -206,20 +207,68 @@ func run() error {
 
 import (
 	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/pkg/errors"
+	"github.com/spf13/afero"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"k8s.io/utils/exec"
 )
 
 type Ctx struct {
 	WorkingDir cli.Path
 	IO         cli.IO
+	FS         afero.Fs
+	Viper      *afero.Viper
+	Exec       exec.Interface
 
-	Build cli.Build
+	Build  cli.Build
+	Config *Config
+}
+
+func (c *Ctx) Init() error {
+	c.Viper.SetFs(c.FS)
+
+	var err error
+
+	err = c.loadConfig()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (c *Ctx) loadConfig() error {
+	c.Viper.SetConfigName(c.Build.AppName)
+
+	err := c.Viper.ReadInConfig()
+	if err != nil {
+		zap.L().Info("failed to find a config file", zap.Error(err))
+		return nil
+	}
+
+	err = c.Viper.Unmarshal(c.Config)
+	if err != nil {
+		zap.L().Warn("failed to parse the config file", zap.Error(err))
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+`)
+	templateConfig = mustCreateTemplate("config", `package {{.Name}}
+
+type Config struct {
 }
 `)
 	templateCmd = mustCreateTemplate("cmd", `package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"k8s.io/utils/exec"
 
 	"{{.Package}}/pkg/{{.Name}}"
 )
@@ -228,6 +277,9 @@ func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Com
 	return New{{ToCamel .Name}}Command(&{{.Name}}.Ctx{
 		WorkingDir: wd,
 		IO:         cli.Stdio(),
+		FS:         afero.NewOsFs(),
+		Viper:      viper.New(),
+		Exec:       exec.Interface(),
 		Build:      build,
 	})
 }
@@ -235,6 +287,9 @@ func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Com
 func New{{ToCamel .Name}}Command(ctx *{{.Name}}.Ctx) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: ctx.Build.AppName,
+		PersistentPreRunE: func(c *cobra.Command, args []string) error {
+			return errors.WithStack(ctx.Init())
+		},
 	}
 
 	cli.AddLoggingFlags(cmd)
