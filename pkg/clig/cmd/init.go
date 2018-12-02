@@ -135,7 +135,12 @@ func main() {
 }
 
 func run() error {
-	cmd := cmd.NewDefault{{ToCamel .Name}}Command(cli.Build{
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	cmd := cmd.NewDefault{{ToCamel .Name}}Command(cli.Path(wd), cli.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,
@@ -152,7 +157,8 @@ import (
 )
 
 type Ctx struct {
-	IO cli.IO
+	WorkingDir cli.Path
+	IO         cli.IO
 
 	Build cli.Build
 }
@@ -166,10 +172,11 @@ import (
 	"{{.Package}}/pkg/{{.Name}}"
 )
 
-func NewDefault{{ToCamel .Name}}Command(build cli.Build) *cobra.Command {
+func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Command {
 	return New{{ToCamel .Name}}Command(&{{.Name}}.Ctx{
-		IO:    cli.Stdio(),
-		Build: build,
+		WorkingDir: wd,
+		IO:         cli.Stdio(),
+		Build:      build,
 	})
 }
 

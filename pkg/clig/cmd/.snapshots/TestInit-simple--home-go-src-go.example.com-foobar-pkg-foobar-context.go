@@ -5,7 +5,8 @@ import (
 )
 
 type Ctx struct {
-	IO cli.IO
+	WorkingDir cli.Path
+	IO         cli.IO
 
 	Build cli.Build
 }

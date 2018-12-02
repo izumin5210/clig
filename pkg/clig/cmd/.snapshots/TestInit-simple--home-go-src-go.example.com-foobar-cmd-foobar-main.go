@@ -26,7 +26,12 @@ func main() {
 }
 
 func run() error {
-	cmd := cmd.NewDefaultFoobarCommand(cli.Build{
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	cmd := cmd.NewDefaultFoobarCommand(cli.Path(wd), cli.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,

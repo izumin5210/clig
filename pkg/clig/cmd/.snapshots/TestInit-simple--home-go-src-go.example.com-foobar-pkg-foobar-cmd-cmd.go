@@ -7,10 +7,11 @@ import (
 	"go.example.com/foobar/pkg/foobar"
 )
 
-func NewDefaultFoobarCommand(build cli.Build) *cobra.Command {
+func NewDefaultFoobarCommand(wd cli.Path, build cli.Build) *cobra.Command {
 	return NewFoobarCommand(&foobar.Ctx{
-		IO:    cli.Stdio(),
-		Build: build,
+		WorkingDir: wd,
+		IO:         cli.Stdio(),
+		Build:      build,
 	})
 }
 
