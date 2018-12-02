@@ -2,6 +2,57 @@
 
 
 [[projects]]
+  digest = "1:97df918963298c287643883209a2c3f642e6593379f97ab400c2a2e219ab647d"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = "UT"
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
+  digest = "1:34bd52916ea0a9e4d95d34dab5bc4f125a7ee7b1e11b1a531d2ea43f41b4f4e8"
+  name = "github.com/google/go-github"
+  packages = ["github"]
+  pruneopts = "UT"
+  revision = "35781f7f4db7b3d7fc3359527472838da65023c6"
+  version = "v19.1.0"
+
+[[projects]]
+  digest = "1:a63cff6b5d8b95638bfe300385d93b2a6d9d687734b863da8e09dc834510a690"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  pruneopts = "UT"
+  revision = "44c6ddd0a2342c386950e880b658017258da92fc"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:20427ddaa8e0ba0904a08f909495bbbd5d7d0a8a8b201cfd3df076fb4381ff55"
+  name = "github.com/haya14busa/errorformat"
+  packages = [
+    ".",
+    "fmts",
+  ]
+  pruneopts = "UT"
+  revision = "689b7d67b7a82a9cae3d8bfcfa0f6f4b5790b88a"
+
+[[projects]]
+  digest = "1:46bea7432a2d8918f6b45be6b34138804d91c046d99a0b568c37f999d8acfad0"
+  name = "github.com/haya14busa/reviewdog"
+  packages = [
+    ".",
+    "cienv",
+    "cmd/reviewdog",
+    "diff",
+    "doghouse",
+    "doghouse/client",
+    "project",
+  ]
+  pruneopts = "UT"
+  revision = "ffb00ef78fd3e05f042505e8aaaa290919ce4d5a"
+  version = "0.9.11"
+
+[[projects]]
   branch = "master"
   digest = "1:89cd2208bdeb192cc83ee287216af3c987fc87a90b9087718ad6631b636cefcf"
   name = "github.com/iancoleman/strcase"
@@ -18,6 +69,28 @@
   version = "v1.0"
 
 [[projects]]
+  digest = "1:395909746961a45abfc8b4a566a53cb6335e580768eae7d29d4a196b2bed2d07"
+  name = "github.com/kisielk/errcheck"
+  packages = [
+    ".",
+    "internal/errcheck",
+  ]
+  pruneopts = "UT"
+  revision = "55d8f507faff4d6eddd0c41a3e713e2567fca4e5"
+  version = "v1.1.0"
+
+[[projects]]
+  digest = "1:15ec2166e33ef6c60b344a04d050eec79193517e7f5082b6233b2d09ef0d10b8"
+  name = "github.com/kisielk/gotool"
+  packages = [
+    ".",
+    "internal/load",
+  ]
+  pruneopts = "UT"
+  revision = "80517062f582ea3340cd4baf70e86d539ae7d84d"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:c658e84ad3916da105a761660dcaeb01e63416c8ec7bc62256a9b411a05fcd67"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
@@ -32,6 +105,38 @@
   pruneopts = "UT"
   revision = "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c"
   version = "v0.0.4"
+
+[[projects]]
+  digest = "1:7efe48dea4db6b35dcc15e15394b627247e5b3fb814242de986b746ba8e0abf0"
+  name = "github.com/mattn/go-shellwords"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "02e3cf038dcea8290e44424da473dd12be796a8a"
+  version = "v1.0.3"
+
+[[projects]]
+  digest = "1:a82223630c35be0e7b7e543bf8db95b8de3f1319671b30c6104ea521a00f36fd"
+  name = "github.com/mitchellh/gox"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c9740af9c6574448fd48eb30a71f964014c7a837"
+  version = "v0.4.0"
+
+[[projects]]
+  digest = "1:05b88b3e999037a6f95fa9edc8234b3a12a1c9d12aaa93e0515c0a9aa76b9c10"
+  name = "github.com/mitchellh/iochan"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b6e3aadd28864e14dae41ff5c7261455b1242d24"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   digest = "1:6a4a11ba764a56d2758899ec6f3848d24698d48442ebce85ee7a3f63284526cd"
@@ -59,6 +164,25 @@
   pruneopts = "UT"
   revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
   version = "v1.0.3"
+
+[[projects]]
+  digest = "1:d4093bdfb1d5d808bd9c61e42121711a077b5094de160ef4d68303604a8c659d"
+  name = "github.com/srvc/wraperr"
+  packages = [
+    ".",
+    "cmd/wraperr",
+  ]
+  pruneopts = "UT"
+  revision = "f6aeb1dc7dbd5421be3f411578f512eb6f6d3e07"
+  version = "v0.2.0"
+
+[[projects]]
+  digest = "1:f2c4fa13782c35d3cea2bf299db73047849c20ee2f3d5739520c65df90e25e93"
+  name = "github.com/xanzy/go-gitlab"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "954568c5d9242be1fb907039d769952fa4f6bc70"
+  version = "v0.11.7"
 
 [[projects]]
   digest = "1:777e729b475d3895c7229552aa10076f0d177daf37c0a72258006d046d329960"
@@ -93,6 +217,47 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:dc994e65c6a07e9611daa4e20788561c1aa72ab9d600eb7c843f55311a9c157c"
+  name = "golang.org/x/lint"
+  packages = [
+    ".",
+    "golint",
+  ]
+  pruneopts = "UT"
+  revision = "c67002cb31c3a748b7688c27f20d8358b4193582"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f8b491a7c25030a895a0e579742d07136e6958e77ef2d46e769db8eec4e58fcd"
+  name = "golang.org/x/net"
+  packages = [
+    "context",
+    "context/ctxhttp",
+  ]
+  pruneopts = "UT"
+  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:7bea7ba08178336c2c82ba215c8e101fe23fd2dc809dd38d4141640442149c2d"
+  name = "golang.org/x/oauth2"
+  packages = [
+    ".",
+    "internal",
+  ]
+  pruneopts = "UT"
+  revision = "28207608b83849a028d4f12e46533a6b6894ecaf"
+
+[[projects]]
+  branch = "master"
+  digest = "1:b521f10a2d8fa85c04a8ef4e62f2d1e14d303599a55d64dabf9f5a02f84d35eb"
+  name = "golang.org/x/sync"
+  packages = ["errgroup"]
+  pruneopts = "UT"
+  revision = "42b317875d0fa942474b76e1b46a6060d720ae6e"
+
+[[projects]]
+  branch = "master"
   digest = "1:8775d8a768d9e65e8b659172804aac5db1fc8d563ba766470a6c2698c57c61a7"
   name = "golang.org/x/sys"
   packages = ["unix"]
@@ -114,16 +279,107 @@
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
+[[projects]]
+  branch = "master"
+  digest = "1:73090ad24f61b369af97ee995ec68e5eea799fd5f36c7d80e02cebf4db2d3250"
+  name = "golang.org/x/tools"
+  packages = [
+    "go/ast/astutil",
+    "go/buildutil",
+    "go/callgraph",
+    "go/callgraph/cha",
+    "go/callgraph/rta",
+    "go/gcexportdata",
+    "go/internal/cgo",
+    "go/internal/gcimporter",
+    "go/loader",
+    "go/packages",
+    "go/ssa",
+    "go/ssa/ssautil",
+    "go/types/typeutil",
+    "internal/fastwalk",
+    "internal/gopathwalk",
+    "internal/semver",
+  ]
+  pruneopts = "UT"
+  revision = "d0ca3933b724e6be513276cc2edb34e10d667438"
+
+[[projects]]
+  digest = "1:08206298775e5b462e6c0333f4471b44e63f1a70e42952b6ede4ecc9572281eb"
+  name = "google.golang.org/appengine"
+  packages = [
+    "internal",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/remote_api",
+    "internal/urlfetch",
+    "urlfetch",
+  ]
+  pruneopts = "UT"
+  revision = "4a4468ece617fc8205e99368fa2200e9d1fad421"
+  version = "v1.3.0"
+
+[[projects]]
+  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
+
+[[projects]]
+  digest = "1:6eaf68fa53735d0b557c7a4d5411d3ad97d98d0afdb0969252d6506e67600285"
+  name = "honnef.co/go/tools"
+  packages = [
+    "callgraph",
+    "callgraph/static",
+    "cmd/megacheck",
+    "deprecated",
+    "functions",
+    "internal/sharedcheck",
+    "lint",
+    "lint/lintutil",
+    "simple",
+    "ssa",
+    "ssa/ssautil",
+    "staticcheck",
+    "staticcheck/vrp",
+    "unused",
+    "version",
+  ]
+  pruneopts = "UT"
+  revision = "d73ab98e7c39fdcf9ba65062e43d34310f198353"
+  version = "2017.2.2"
+
+[[projects]]
+  branch = "master"
+  digest = "1:13983723de25381249772ec2b79bebe5426bf875c31cd216f8a94820bf6697fa"
+  name = "mvdan.cc/unparam"
+  packages = [
+    ".",
+    "check",
+  ]
+  pruneopts = "UT"
+  revision = "68701730a1d7cb7ec4085dda7cb976d03f6d1ebf"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/haya14busa/reviewdog/cmd/reviewdog",
     "github.com/iancoleman/strcase",
+    "github.com/kisielk/errcheck",
     "github.com/mattn/go-colorable",
+    "github.com/mitchellh/gox",
     "github.com/spf13/afero",
     "github.com/spf13/cobra",
+    "github.com/srvc/wraperr/cmd/wraperr",
     "go.uber.org/zap",
     "go.uber.org/zap/zapcore",
+    "golang.org/x/lint/golint",
+    "honnef.co/go/tools/cmd/megacheck",
+    "mvdan.cc/unparam",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

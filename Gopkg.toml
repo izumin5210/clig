@@ -48,3 +48,31 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/haya14busa/reviewdog"
+  version = "0.9.11"
+
+[[constraint]]
+  name = "github.com/kisielk/errcheck"
+  version = "1.1.0"
+
+[[constraint]]
+  name = "github.com/srvc/wraperr"
+  version = "0.2.0"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/lint"
+
+[[constraint]]
+  name = "honnef.co/go/tools"
+  version = "2017.2.2"
+
+[[constraint]]
+  branch = "master"
+  name = "mvdan.cc/unparam"
+
+[[constraint]]
+  name = "github.com/mitchellh/gox"
+  version = "0.4.0"
