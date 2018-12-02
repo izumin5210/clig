@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"go/build"
+	"go/format"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -154,6 +155,15 @@ func (e *entry) Create(fs afero.Fs, params interface{}) error {
 	err := e.Template.Execute(buf, params)
 	if err != nil {
 		return err
+	}
+
+	data := buf.Bytes()
+
+	if filepath.Ext(e.Path) == ".go" {
+		data, err = format.Source(data)
+		if err != nil {
+			return err
+		}
 	}
 
 	zap.L().Debug("create a new flie", zap.String("path", e.Path))
