@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"go/build"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 
 	"github.com/izumin5210/clig/pkg/clig"
 )
@@ -37,6 +39,10 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 			}{Name: name, Package: pkg}
 
 			entries := []*entry{
+				{Path: root.Join(".gitignore").String(), Template: templateGitignore},
+				{Path: root.Join(".reviewdog.yml").String(), Template: templateReviewdog},
+				{Path: root.Join(".travis.yml").String(), Template: templateTravis},
+				{Path: root.Join("Makefile").String(), Template: templateMakefile},
 				{Path: root.Join("cmd", params.Name, "main.go").String(), Template: templateMain},
 				{Path: root.Join("pkg", params.Name, "context.go").String(), Template: templateCtx},
 				{Path: root.Join("pkg", params.Name, "cmd", "cmd.go").String(), Template: templateCmd},
@@ -47,6 +53,50 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 				if err != nil {
 					return err
 				}
+			}
+
+			ctx := context.TODO()
+
+			run := func(ctx context.Context, name string, args ...string) error {
+				cmd := c.Exec.CommandContext(ctx, name, args...)
+				cmd.SetStdin(c.IO.In())
+				cmd.SetStdout(c.IO.Out())
+				cmd.SetStderr(c.IO.Err())
+				cmd.SetDir(root.String())
+				zap.L().Debug("exec command", zap.String("cmd", name), zap.Strings("args", args), zap.Stringer("dir", root))
+				return cmd.Run()
+			}
+
+			err = run(ctx, "dep", "init")
+			if err != nil {
+				return err
+			}
+
+			if _, err := c.Exec.LookPath("gex"); err != nil {
+				err = run(ctx, "go", "get", "github.com/izumin5210/gex/cmd/gex")
+				if err != nil {
+					return err
+				}
+			}
+
+			pkgs := []string{"github.com/mitchellh/gox"}
+			pkgs = append(pkgs,
+				"github.com/haya14busa/reviewdog/cmd/reviewdog",
+				"github.com/kisielk/errcheck",
+				"github.com/srvc/wraperr/cmd/wraperr",
+				"golang.org/x/lint/golint",
+				"honnef.co/go/tools/cmd/megacheck",
+				"mvdan.cc/unparam",
+			)
+			gexArgs := make([]string, 2*len(pkgs))
+			for i, pkg := range pkgs {
+				gexArgs[2*i+0] = "--add"
+				gexArgs[2*i+1] = pkg
+			}
+
+			err = run(ctx, "gex", gexArgs...)
+			if err != nil {
+				return err
 			}
 
 			return nil
@@ -81,6 +131,7 @@ func (e *entry) Create(fs afero.Fs, params interface{}) error {
 	if ok, err := afero.DirExists(fs, dir); err != nil {
 		return err
 	} else if !ok {
+		zap.L().Debug("create a directory", zap.String("dir", dir))
 		err = fs.MkdirAll(dir, 0755)
 		if err != nil {
 			return err
@@ -93,6 +144,7 @@ func (e *entry) Create(fs afero.Fs, params interface{}) error {
 		return err
 	}
 
+	zap.L().Debug("create a new flie", zap.String("path", e.Path))
 	err = afero.WriteFile(fs, e.Path, buf.Bytes(), 0644)
 	if err != nil {
 		return err
@@ -193,5 +245,177 @@ func New{{ToCamel .Name}}Command(ctx *{{.Name}}.Ctx) *cobra.Command {
 
 	return cmd
 }
+`)
+	templateMakefile = mustCreateTemplate("makefile", `PATH := ${PWD}/bin:${PATH}
+export PATH
+
+.DEFAULT_GOAL := all
+
+REVISION ?= $(shell git describe --always)
+BUILD_DATE ?= $(shell date +'%Y-%m-%dT%H:%M:%SZ')
+
+GO_BUILD_FLAGS := -v
+GO_TEST_FLAGS := -v -timeout 2m
+GO_COVER_FLAGS := -coverprofile coverage.txt -covermode atomic
+SRC_FILES := $(shell go list -f {{"'{{range .GoFiles}}{{printf \"%s/%s\\n\" $$.Dir .}}{{end}}'"}} ./...)
+
+XC_ARCH := 386 amd64
+XC_OS := darwin linux windows
+
+
+#  App
+#----------------------------------------------------------------
+BIN_DIR := ./bin
+OUT_DIR := ./dist
+GENERATED_BINS :=
+PACKAGES :=
+
+define cmd-tmpl
+
+$(eval NAME := $(notdir $(1)))
+$(eval OUT := $(addprefix $(BIN_DIR)/,$(NAME)))
+$(eval LDFLAGS := -ldflags "-X main.revision=$(REVISION) -X main.buildDate=$(BUILD_DATE)")
+
+$(OUT): $(SRC_FILES)
+	go build $(GO_BUILD_FLAGS) $(LDFLAGS) -o $(OUT) $(1)
+
+.PHONY: $(NAME)
+$(NAME): $(OUT)
+
+.PHONY: $(NAME)-package
+$(NAME)-package: $(NAME)
+	gox \
+		$(LDFLAGS) \
+		-os="$(XC_OS)" \
+		-arch="$(XC_ARCH)" \
+		-output="$(OUT_DIR)/$(NAME)_{{"{{.OS}}_{{.Arch}}"}}" \
+		$(1)
+
+$(eval GENERATED_BINS += $(OUT))
+$(eval PACKAGES += $(NAME)-package)
+
+endef
+
+$(foreach src,$(wildcard ./cmd/*),$(eval $(call cmd-tmpl,$(src))))
+
+
+#  Commands
+#----------------------------------------------------------------
+.PHONY: all
+all: $(GENERATED_BINS)
+
+.PHONY: packages
+packages: $(PACKAGES)
+
+.PHONY: setup
+setup:
+ifdef CI
+	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+endif
+	dep ensure -v -vendor-only
+	@go get github.com/izumin5210/gex/cmd/gex
+	gex --build --verbose
+
+.PHONY: clean
+clean:
+	rm -rf $(BIN_DIR)/*
+
+.PHONY: gen
+gen:
+	go generate ./...
+
+.PHONY: lint
+lint:
+ifdef CI
+        gex reviewdog -reporter=github-pr-review
+else
+        gex reviewdog -diff="git diff master"
+endif
+
+.PHONY: test
+test:
+	go test $(GO_TEST_FLAGS) ./...
+
+.PHONY: cover
+cover:
+	go test $(GO_TEST_FLAGS) $(GO_COVER_FLAGS) ./...
+`)
+	templateGitignore = mustCreateTemplate("gitignore", `/bin
+/dist
+/vendor
+`)
+	templateReviewdog = mustCreateTemplate("reviewdog", `runner:
+  golint:
+    cmd: golint $(go list ./... | grep -v /vendor/)
+    format: golint
+  govet:
+    cmd: go vet $(go list ./... | grep -v /vendor/)
+    format: govet
+  errcheck:
+    cmd: errcheck -asserts -ignoretests -blank ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  wraperr:
+    cmd: wraperr ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  megacheck:
+    cmd: megacheck ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  unparam:
+    cmd: unparam ./...
+    errorformat:
+      - "%f:%l:%c: %m"
+`)
+	templateTravis = mustCreateTemplate("travis", `language: go
+
+go: '1.11'
+
+env:
+  global:
+  - DEP_RELEASE_TAG=v0.5.0
+  - FILE_TO_DEPLOY="dist/*"
+
+  # GITHUB_TOKEN
+  # TODO: shold encrypt and set a github access token using "travis encrypt" command
+  - secure: "..."
+  - REVIEWDOG_GITHUB_API_TOKEN=$GITHUB_TOKEN
+
+cache:
+  directories:
+  - $GOPATH/pkg/dep
+  - $HOME/.cache/go-build
+
+jobs:
+  include:
+  - name: lint
+    install: make setup
+    script: make lint
+    if: type = 'pull_request'
+
+  - &test
+    install: make setup
+    script: make test
+    if: type != 'pull_request'
+
+  - <<: *test
+    go: master
+
+  - <<: *test
+    go: '1.10'
+
+  - stage: deploy
+    install: make setup
+    script: make packages -j4
+    deploy:
+    - provider: releases
+      skip_cleanup: true
+      api_key: $GITHUB_TOKEN
+      file_glob: true
+      file: $FILE_TO_DEPLOY
+      on:
+        tags: true
+    if: type != 'pull_request'
 `)
 )

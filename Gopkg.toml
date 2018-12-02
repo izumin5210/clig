@@ -80,3 +80,7 @@
 [[constraint]]
   name = "github.com/bradleyjkemp/cupaloy"
   version = "2.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "k8s.io/utils"

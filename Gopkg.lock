@@ -378,6 +378,17 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:cd0855ac6b2ca65ed473699b7cacc68539b4b9994dbc21c6d4124b89a46c66de"
+  name = "k8s.io/utils"
+  packages = [
+    "exec",
+    "exec/testing",
+  ]
+  pruneopts = "UT"
+  revision = "0d26856f57b32ec3398579285e5c8a2bfe8c5243"
+
+[[projects]]
+  branch = "master"
   digest = "1:13983723de25381249772ec2b79bebe5426bf875c31cd216f8a94820bf6697fa"
   name = "mvdan.cc/unparam"
   packages = [
@@ -404,6 +415,8 @@
     "go.uber.org/zap/zapcore",
     "golang.org/x/lint/golint",
     "honnef.co/go/tools/cmd/megacheck",
+    "k8s.io/utils/exec",
+    "k8s.io/utils/exec/testing",
     "mvdan.cc/unparam",
   ]
   solver-name = "gps-cdcl"
