@@ -76,6 +76,14 @@ clean:
 gen:
 	go generate ./...
 
+.PHONY: lint
+lint:
+ifdef CI
+        gex reviewdog -reporter=github-pr-review
+else
+        gex reviewdog -diff="git diff master"
+endif
+
 .PHONY: test
 test:
 	go test $(GO_TEST_FLAGS) ./...

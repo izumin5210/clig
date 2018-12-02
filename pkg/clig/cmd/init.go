@@ -40,6 +40,7 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 
 			entries := []*entry{
 				{Path: root.Join(".gitignore").String(), Template: templateGitignore},
+				{Path: root.Join(".reviewdog.yml").String(), Template: templateReviewdog},
 				{Path: root.Join("Makefile").String(), Template: templateMakefile},
 				{Path: root.Join("cmd", params.Name, "main.go").String(), Template: templateMain},
 				{Path: root.Join("pkg", params.Name, "context.go").String(), Template: templateCtx},
@@ -77,7 +78,22 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 				}
 			}
 
-			err = run(ctx, "gex", "--add", "github.com/mitchellh/gox")
+			pkgs := []string{"github.com/mitchellh/gox"}
+			pkgs = append(pkgs,
+				"github.com/haya14busa/reviewdog/cmd/reviewdog",
+				"github.com/kisielk/errcheck",
+				"github.com/srvc/wraperr/cmd/wraperr",
+				"golang.org/x/lint/golint",
+				"honnef.co/go/tools/cmd/megacheck",
+				"mvdan.cc/unparam",
+			)
+			gexArgs := make([]string, 2*len(pkgs))
+			for i, pkg := range pkgs {
+				gexArgs[2*i+0] = "--add"
+				gexArgs[2*i+1] = pkg
+			}
+
+			err = run(ctx, "gex", gexArgs...)
 			if err != nil {
 				return err
 			}
@@ -307,6 +323,14 @@ clean:
 gen:
 	go generate ./...
 
+.PHONY: lint
+lint:
+ifdef CI
+        gex reviewdog -reporter=github-pr-review
+else
+        gex reviewdog -diff="git diff master"
+endif
+
 .PHONY: test
 test:
 	go test $(GO_TEST_FLAGS) ./...
@@ -318,5 +342,29 @@ cover:
 	templateGitignore = mustCreateTemplate("gitignore", `/bin
 /dist
 /vendor
+`)
+	templateReviewdog = mustCreateTemplate("reviewdog", `runner:
+  golint:
+    cmd: golint $(go list ./... | grep -v /vendor/)
+    format: golint
+  govet:
+    cmd: go vet $(go list ./... | grep -v /vendor/)
+    format: govet
+  errcheck:
+    cmd: errcheck -asserts -ignoretests -blank ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  wraperr:
+    cmd: wraperr ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  megacheck:
+    cmd: megacheck ./...
+    errorformat:
+      - "%f:%l:%c:%m"
+  unparam:
+    cmd: unparam ./...
+    errorformat:
+      - "%f:%l:%c: %m"
 `)
 )

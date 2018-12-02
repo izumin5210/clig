@@ -41,6 +41,7 @@ func TestInit(t *testing.T) {
 			args: []string{"foobar"},
 			files: []string{
 				"foobar/.gitignore",
+				"foobar/.reviewdog.yml",
 				"foobar/Makefile",
 				"foobar/cmd/foobar/main.go",
 				"foobar/pkg/foobar/context.go",
@@ -48,7 +49,15 @@ func TestInit(t *testing.T) {
 			},
 			excmds: []*exectesting.FakeCmd{
 				createFakeCmd("dep", "init"),
-				createFakeCmd("gex", "--add", "github.com/mitchellh/gox"),
+				createFakeCmd("gex",
+					"--add", "github.com/mitchellh/gox",
+					"--add", "github.com/haya14busa/reviewdog/cmd/reviewdog",
+					"--add", "github.com/kisielk/errcheck",
+					"--add", "github.com/srvc/wraperr/cmd/wraperr",
+					"--add", "golang.org/x/lint/golint",
+					"--add", "honnef.co/go/tools/cmd/megacheck",
+					"--add", "mvdan.cc/unparam",
+				),
 			},
 		},
 		{
@@ -56,6 +65,7 @@ func TestInit(t *testing.T) {
 			args: []string{"foobar"},
 			files: []string{
 				"foobar/.gitignore",
+				"foobar/.reviewdog.yml",
 				"foobar/Makefile",
 				"foobar/cmd/foobar/main.go",
 				"foobar/pkg/foobar/context.go",
@@ -64,7 +74,15 @@ func TestInit(t *testing.T) {
 			excmds: []*exectesting.FakeCmd{
 				createFakeCmd("dep", "init"),
 				createFakeCmd("go", "get", "github.com/izumin5210/gex/cmd/gex"),
-				createFakeCmd("gex", "--add", "github.com/mitchellh/gox"),
+				createFakeCmd("gex",
+					"--add", "github.com/mitchellh/gox",
+					"--add", "github.com/haya14busa/reviewdog/cmd/reviewdog",
+					"--add", "github.com/kisielk/errcheck",
+					"--add", "github.com/srvc/wraperr/cmd/wraperr",
+					"--add", "golang.org/x/lint/golint",
+					"--add", "honnef.co/go/tools/cmd/megacheck",
+					"--add", "mvdan.cc/unparam",
+				),
 			},
 			lookPathFunc: func(cmd string) (string, error) {
 				if cmd == "gex" {
