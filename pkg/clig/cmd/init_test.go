@@ -42,6 +42,7 @@ func TestInit(t *testing.T) {
 			files: []string{
 				"foobar/.gitignore",
 				"foobar/.reviewdog.yml",
+				"foobar/.travis.yml",
 				"foobar/Makefile",
 				"foobar/cmd/foobar/main.go",
 				"foobar/pkg/foobar/context.go",
@@ -66,6 +67,7 @@ func TestInit(t *testing.T) {
 			files: []string{
 				"foobar/.gitignore",
 				"foobar/.reviewdog.yml",
+				"foobar/.travis.yml",
 				"foobar/Makefile",
 				"foobar/cmd/foobar/main.go",
 				"foobar/pkg/foobar/context.go",
