@@ -40,3 +40,4 @@ func run() error {
 
 	return cmd.Execute()
 }
+
