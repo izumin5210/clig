@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/izumin5210/clig/pkg/cli"
-	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"k8s.io/utils/exec"
@@ -36,3 +35,4 @@ func NewFoobarCommand(ctx *foobar.Ctx) *cobra.Command {
 
 	return cmd
 }
+

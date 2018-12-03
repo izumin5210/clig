@@ -167,7 +167,7 @@ func (e *entry) Create(fs afero.Fs, params interface{}) error {
 	}
 
 	zap.L().Debug("create a new flie", zap.String("path", e.Path))
-	err = afero.WriteFile(fs, e.Path, buf.Bytes(), 0644)
+	err = afero.WriteFile(fs, e.Path, data, 0644)
 	if err != nil {
 		return err
 	}
