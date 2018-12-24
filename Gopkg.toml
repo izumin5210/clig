@@ -31,7 +31,7 @@
 
 [[constraint]]
   name = "github.com/mattn/go-colorable"
-  version = "0.0.9"
+  version = "^0.0.9"
 
 [[constraint]]
   name = "github.com/spf13/afero"
@@ -39,11 +39,11 @@
 
 [[constraint]]
   name = "github.com/spf13/cobra"
-  version = "0.0.3"
+  version = "^0.0.3"
 
 [[constraint]]
   name = "go.uber.org/zap"
-  version = "1.9.1"
+  version = "^1.9.1"
 
 [prune]
   go-tests = true
@@ -51,15 +51,15 @@
 
 [[constraint]]
   name = "github.com/haya14busa/reviewdog"
-  version = "0.9.11"
+  version = "^0.9.11"
 
 [[constraint]]
   name = "github.com/kisielk/errcheck"
-  version = "1.1.0"
+  version = "^1.1.0"
 
 [[constraint]]
   name = "github.com/srvc/wraperr"
-  version = "0.2.0"
+  version = "^0.2.0"
 
 [[constraint]]
   branch = "master"
@@ -67,7 +67,7 @@
 
 [[constraint]]
   name = "honnef.co/go/tools"
-  version = "2017.2.2"
+  version = "^2017.2.2"
 
 [[constraint]]
   branch = "master"
@@ -75,11 +75,11 @@
 
 [[constraint]]
   name = "github.com/mitchellh/gox"
-  version = "0.4.0"
+  version = "^0.4.0"
 
 [[constraint]]
   name = "github.com/bradleyjkemp/cupaloy"
-  version = "2.3.0"
+  version = "^2.3.0"
 
 [[constraint]]
   branch = "master"
