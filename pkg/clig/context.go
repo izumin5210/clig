@@ -4,14 +4,14 @@ import (
 	"github.com/spf13/afero"
 	"k8s.io/utils/exec"
 
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 )
 
 type Ctx struct {
-	WorkingDir cli.Path
-	IO         cli.IO
+	WorkingDir clib.Path
+	IO         clib.IO
 	FS         afero.Fs
 	Exec       exec.Interface
 
-	Build cli.Build
+	Build clib.Build
 }

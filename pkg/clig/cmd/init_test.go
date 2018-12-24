@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"
-	"github.com/izumin5210/clig/pkg/cli"
-	clitesting "github.com/izumin5210/clig/pkg/cli/testing"
+	"github.com/izumin5210/clig/pkg/clib"
+	clibtesting "github.com/izumin5210/clig/pkg/clib/testing"
 	"github.com/spf13/afero"
 	"k8s.io/utils/exec"
 	exectesting "k8s.io/utils/exec/testing"
@@ -19,7 +19,7 @@ import (
 func TestInit(t *testing.T) {
 	defer func(p string) { BuildContext.GOPATH = p }(BuildContext.GOPATH)
 	BuildContext.GOPATH = "/home/go"
-	wd := cli.Path("/home/go/src/go.example.com")
+	wd := clib.Path("/home/go/src/go.example.com")
 
 	createFakeCmd := func(name string, args ...string) *exectesting.FakeCmd {
 		cmd := &exectesting.FakeCmd{
@@ -142,7 +142,7 @@ func TestInit(t *testing.T) {
 
 			ctx := &clig.Ctx{
 				WorkingDir: wd,
-				IO:         clitesting.NewFakeIO(),
+				IO:         clibtesting.NewFakeIO(),
 				FS:         fs,
 				Exec:       fexec,
 			}

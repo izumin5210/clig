@@ -1,4 +1,4 @@
-package cli
+package clib
 
 var closers []func()
 

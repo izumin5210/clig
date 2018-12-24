@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 
 	"go.example.com/foobar/pkg/foobar/cmd"
 )
@@ -31,7 +31,7 @@ func run() error {
 		return err
 	}
 
-	cmd := cmd.NewDefaultFoobarCommand(cli.Path(wd), cli.Build{
+	cmd := cmd.NewDefaultFoobarCommand(clib.Path(wd), clib.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,
