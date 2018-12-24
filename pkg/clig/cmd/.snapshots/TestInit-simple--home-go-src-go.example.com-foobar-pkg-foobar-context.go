@@ -13,7 +13,7 @@ type Ctx struct {
 	WorkingDir clib.Path
 	IO         clib.IO
 	FS         afero.Fs
-	Viper      *afero.Viper
+	Viper      *viper.Viper
 	Exec       exec.Interface
 
 	Build  clib.Build

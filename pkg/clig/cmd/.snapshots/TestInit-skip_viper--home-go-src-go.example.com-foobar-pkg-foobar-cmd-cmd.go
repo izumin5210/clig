@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/izumin5210/clig/pkg/clib"
+	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"k8s.io/utils/exec"
@@ -14,7 +15,7 @@ func NewDefaultFoobarCommand(wd clib.Path, build clib.Build) *cobra.Command {
 		WorkingDir: wd,
 		IO:         clib.Stdio(),
 		FS:         afero.NewOsFs(),
-		Exec:       exec.Interface(),
+		Exec:       exec.New(),
 		Build:      build,
 	})
 }
