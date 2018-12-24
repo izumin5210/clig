@@ -1,10 +1,10 @@
-# clig / cli
+# clig / clib
 [![Build Status](https://travis-ci.com/izumin5210/clig.svg?branch=master)](https://travis-ci.com/izumin5210/clig)
 [![GoDoc](https://godoc.org/github.com/izumin5210/clig/pkg/cli?status.svg)](https://godoc.org/github.com/izumin5210/clig/pkg/cli)
 [![license](https://img.shields.io/github/license/izumin5210/clig.svg)](./LICENSE)
 
 - :building_construction: `clig` is a boilerplate generator for CLI tools in Go
-- :wrench: [`pkg/cli`](https://godoc.org/github.com/izumin5210/clig/pkg/cli) is a utility package to create CLI tools efficiently 
+- :wrench: [`pkg/clib`](https://godoc.org/github.com/izumin5210/clig/pkg/clib) is a utility package to create CLI tools efficiently 
 
 ## Usage
 
