@@ -187,7 +187,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 
 	"{{.Package}}/pkg/{{.Name}}/cmd"
 )
@@ -214,7 +214,7 @@ func run() error {
 		return err
 	}
 
-	cmd := cmd.NewDefault{{ToCamel .Name}}Command(cli.Path(wd), cli.Build{
+	cmd := cmd.NewDefault{{ToCamel .Name}}Command(clib.Path(wd), clib.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,
@@ -227,7 +227,7 @@ func run() error {
 	templateCtx = mustCreateTemplate("ctx", `package {{.Name}}
 
 import (
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	{{- if .ViperEnabled}}
@@ -238,15 +238,15 @@ import (
 )
 
 type Ctx struct {
-	WorkingDir cli.Path
-	IO         cli.IO
+	WorkingDir clib.Path
+	IO         clib.IO
 	FS         afero.Fs
 	{{- if .ViperEnabled}}
 	Viper      *afero.Viper
 	{{- end}}
 	Exec       exec.Interface
 
-	Build  cli.Build
+	Build  clib.Build
 	Config *Config
 }
 
@@ -294,7 +294,7 @@ type Config struct {
 	templateCmd = mustCreateTemplate("cmd", `package cmd
 
 import (
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	{{- if .ViperEnabled}}
@@ -305,10 +305,10 @@ import (
 	"{{.Package}}/pkg/{{.Name}}"
 )
 
-func NewDefault{{ToCamel .Name}}Command(wd cli.Path, build cli.Build) *cobra.Command {
+func NewDefault{{ToCamel .Name}}Command(wd clib.Path, build clib.Build) *cobra.Command {
 	return New{{ToCamel .Name}}Command(&{{.Name}}.Ctx{
 		WorkingDir: wd,
-		IO:         cli.Stdio(),
+		IO:         clib.Stdio(),
 		FS:         afero.NewOsFs(),
 		{{- if .ViperEnabled}}
 		Viper:      viper.New(),
@@ -326,10 +326,10 @@ func New{{ToCamel .Name}}Command(ctx *{{.Name}}.Ctx) *cobra.Command {
 		},
 	}
 
-	cli.AddLoggingFlags(cmd)
+	clib.AddLoggingFlags(cmd)
 
 	cmd.AddCommand(
-		cli.NewVersionCommand(ctx.IO, ctx.Build),
+		clib.NewVersionCommand(ctx.IO, ctx.Build),
 	)
 
 	return cmd

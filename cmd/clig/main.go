@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/izumin5210/clig/pkg/clig/cmd"
 )
 
@@ -30,7 +30,7 @@ func run() error {
 		return err
 	}
 
-	cmd := cmd.NewDefaultCligCommand(cli.Path(wd), cli.Build{
+	cmd := cmd.NewDefaultCligCommand(clib.Path(wd), clib.Build{
 		AppName:   appName,
 		Version:   version,
 		Revision:  revision,

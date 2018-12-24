@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/izumin5210/clig/pkg/cli"
+	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -10,10 +10,10 @@ import (
 	"go.example.com/foobar/pkg/foobar"
 )
 
-func NewDefaultFoobarCommand(wd cli.Path, build cli.Build) *cobra.Command {
+func NewDefaultFoobarCommand(wd clib.Path, build clib.Build) *cobra.Command {
 	return NewFoobarCommand(&foobar.Ctx{
 		WorkingDir: wd,
-		IO:         cli.Stdio(),
+		IO:         clib.Stdio(),
 		FS:         afero.NewOsFs(),
 		Viper:      viper.New(),
 		Exec:       exec.Interface(),
@@ -29,10 +29,10 @@ func NewFoobarCommand(ctx *foobar.Ctx) *cobra.Command {
 		},
 	}
 
-	cli.AddLoggingFlags(cmd)
+	clib.AddLoggingFlags(cmd)
 
 	cmd.AddCommand(
-		cli.NewVersionCommand(ctx.IO, ctx.Build),
+		clib.NewVersionCommand(ctx.IO, ctx.Build),
 	)
 
 	return cmd
