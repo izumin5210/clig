@@ -10,9 +10,9 @@
 
 ```console
 # initialize a new project
-$ clig init your-app-name
+$ clig init awesomecli
 
-$ cd your-app-name
+$ cd awesomecli
 $ tree -I 'bin|vendor'
 .
 ├── Gopkg.lock
