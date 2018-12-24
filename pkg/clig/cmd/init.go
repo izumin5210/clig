@@ -242,7 +242,7 @@ type Ctx struct {
 	IO         clib.IO
 	FS         afero.Fs
 	{{- if .ViperEnabled}}
-	Viper      *afero.Viper
+	Viper      *viper.Viper
 	{{- end}}
 	Exec       exec.Interface
 
@@ -295,6 +295,7 @@ type Config struct {
 
 import (
 	"github.com/izumin5210/clig/pkg/clib"
+	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	{{- if .ViperEnabled}}
@@ -313,7 +314,7 @@ func NewDefault{{ToCamel .Name}}Command(wd clib.Path, build clib.Build) *cobra.C
 		{{- if .ViperEnabled}}
 		Viper:      viper.New(),
 		{{- end}}
-		Exec:       exec.Interface(),
+		Exec:       exec.New(),
 		Build:      build,
 	})
 }
