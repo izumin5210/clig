@@ -18,7 +18,7 @@ type Build struct {
 }
 
 // NewVersionCommand create a new cobra.Command to print the version information.
-func NewVersionCommand(io IO, cfg Build) *cobra.Command {
+func NewVersionCommand(cfg Build) *cobra.Command {
 	return &cobra.Command{
 		Use:           "version",
 		Short:         "Print the version information",
@@ -36,7 +36,7 @@ func NewVersionCommand(io IO, cfg Build) *cobra.Command {
 			}
 			buf.WriteString(strings.Join(meta, " "))
 			buf.WriteString(")")
-			fmt.Fprintln(io.Out(), buf.String())
+			fmt.Fprintln(GetIO(cmd).Out(), buf.String())
 		},
 	}
 }

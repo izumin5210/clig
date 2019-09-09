@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	colorable "github.com/mattn/go-colorable"
+	"github.com/spf13/cobra"
 )
 
 // IO contains an input reader, an output writer and an error writer.
@@ -38,4 +39,20 @@ func Stdio() IO {
 		io.ErrW = colorable.NewColorableStderr()
 	}
 	return io
+}
+
+// SetIO set an IO to *cobra.Command.
+func SetIO(c *cobra.Command, io IO) {
+	c.SetIn(io.In())
+	c.SetOut(io.Out())
+	c.SetErr(io.Err())
+}
+
+// GetIO extract an IO object from *cobra.Command.
+func GetIO(c *cobra.Command) IO {
+	return &IOContainer{
+		InR:  c.InOrStdin(),
+		OutW: c.OutOrStdout(),
+		ErrW: c.ErrOrStderr(),
+	}
 }

@@ -25,10 +25,11 @@ func NewCligCommand(ctx *clig.Ctx) *cobra.Command {
 	}
 
 	clib.AddLoggingFlags(cmd)
+	clib.SetIO(cmd, ctx.IO)
 
 	cmd.AddCommand(
 		newInitCommand(ctx),
-		clib.NewVersionCommand(ctx.IO, ctx.Build),
+		clib.NewVersionCommand(ctx.Build),
 	)
 
 	return cmd
