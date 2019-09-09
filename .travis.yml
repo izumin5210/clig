@@ -1,16 +1,17 @@
 language: go
 
-go: '1.11'
+go: '1.13'
 
 env:
   global:
-  - DEP_RELEASE_TAG=v0.5.0
+  - GO111MODULE=on
   - FILE_TO_DEPLOY="dist/*"
 
   # GITHUB_TOKEN
   - secure: "dR3krMPUpcSi5BY0zA7m2Af0E4lU5aUlA6YFRUfvV0PxWIiqLBu8OUXWHpiIn4sxcRw/H/3RcU4jo683XXZYUdTQc1IU2n3odLOsXHEk3xu366yBa/QXLkQ2xxBu9Ri9kNNDKvZAFBK8Ho1BXCukNid+504/wupt55UxFdCeRvqQd1gCu1mibAA9ep2zLCveOW/i7xaBt9FpJQqAfCwX9qmS7x5DuUh9F5LzFEbaiF/0FEOoumj1QQ0SA3Ascn4qO3e11CsZzhALES+p4yqAK1nQOq/XMP5xWZ0X6HzO2nE/gq/4xZpYpjyJ5vhoytuKCWcnmVYeUjjuIn89NqGDJZMfuG8qzmmAEu7uaOmEgU4w5Rdf/jkound0laC3RXXVKX1gJ22qClOjzFd92gNUoaUxFTMWW+6Hxb7/FyXUx/cAX3646EU7pHip6KpnB33PvvEM87/FdUivoGprn4Al4XWEtwq74KnUl9YG47ZoF5wrL6C+52D7iUJUSZTZPFRmBknlvAR74SewZlNMfVJGVPqSO7NEXf2sBXx+FkhIJNlbs9hyKVjRuGmOjrwUZPNU5OKGrc/Px8X6/AYdKetHFnuszOaienYqJrW/ya4PbFW8DGISKDVqihLmxdvzeZtrpuBX9ccZq1z0zhW/zivw5GLhzcWH09NVAO6g6kXz7Ms="
   # REVIEWDOG_GITHUB_API_TOKEN
   - REVIEWDOG_GITHUB_API_TOKEN=$GITHUB_TOKEN
+
 
 cache:
   directories:
@@ -20,30 +21,25 @@ cache:
 jobs:
   include:
   - name: lint
-    install: make setup
     script: make lint
     if: type = 'pull_request'
 
   - &test
-    install: make setup
     script: make test
     if: type != 'pull_request'
 
   - <<: *test
-    go: master
+    go: '1.12'
 
-  - <<: *test
-    go: '1.10'
-
-  - stage: deploy
-    install: make setup
-    script: make packages -j4
-    deploy:
-    - provider: releases
-      skip_cleanup: true
-      api_key: $GITHUB_TOKEN
-      file_glob: true
-      file: $FILE_TO_DEPLOY
-      on:
-        tags: true
-    if: type != 'pull_request'
+  # - stage: deploy
+  #   install: make tools
+  #   script: make packages -j4
+  #   deploy:
+  #   - provider: releases
+  #     skip_cleanup: true
+  #     api_key: $GITHUB_TOKEN
+  #     file_glob: true
+  #     file: $FILE_TO_DEPLOY
+  #     on:
+  #       tags: true
+  #   if: type != 'pull_request'
