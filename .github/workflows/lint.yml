@@ -1,0 +1,17 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: lint
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+      - uses: go mod download
+      - uses: make lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,31 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: test with go${{ matrix.go }}
+    strategy:
+      matrix:
+        go: [ '1.12', '1.13' ]
+    name: test with go${{ matrix.go }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - run: go test -v ./...
+
+  build:
+    runs-on: ubuntu-latest
+    name: build
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+      - uses: izumin5210/actions-go-crossbuild@master
+        with:
+          name: 'clig'
+          package: './cmd/clig'
