@@ -11,7 +11,7 @@ import (
 
 type Ctx struct {
 	WorkingDir clib.Path
-	IO         clib.IO
+	IO         *clib.IO
 	FS         afero.Fs
 	Viper      *viper.Viper
 	Exec       exec.Interface
