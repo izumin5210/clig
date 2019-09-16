@@ -28,7 +28,7 @@ func NewFoobarCommand(ctx *foobar.Ctx) *cobra.Command {
 		},
 	}
 
-	clib.SetIO(ctx.IO)
+	clib.SetIO(cmd, ctx.IO)
 	clib.AddLoggingFlags(cmd)
 
 	cmd.AddCommand(

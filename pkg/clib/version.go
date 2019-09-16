@@ -36,7 +36,7 @@ func NewVersionCommand(cfg Build) *cobra.Command {
 			}
 			buf.WriteString(strings.Join(meta, " "))
 			buf.WriteString(")")
-			fmt.Fprintln(GetIO(cmd).Out(), buf.String())
+			fmt.Fprintln(cmd.OutOrStdout(), buf.String())
 		},
 	}
 }
