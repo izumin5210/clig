@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bytes"
 	"errors"
 	"os"
 	"reflect"
@@ -140,10 +139,9 @@ func TestInit(t *testing.T) {
 				})
 			}
 
-			io := clib.NewIO(new(bytes.Buffer), new(bytes.Buffer), new(bytes.Buffer))
 			ctx := &clig.Ctx{
 				WorkingDir: wd,
-				IO:         io,
+				IO:         clib.NewBufferedIO(),
 				FS:         fs,
 				Exec:       fexec,
 			}

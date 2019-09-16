@@ -1,6 +1,7 @@
 package clib
 
 import (
+	"bytes"
 	"io"
 	"os"
 	"runtime"
@@ -36,6 +37,10 @@ func NewIO(inR io.Reader, outW io.Writer, errW io.Writer) *IO {
 		Out: outW,
 		Err: errW,
 	}
+}
+
+func NewBufferedIO() *IO {
+	return NewIO(new(bytes.Buffer), new(bytes.Buffer), new(bytes.Buffer))
 }
 
 // SetIO set an IO to *cobra.Command.
