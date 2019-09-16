@@ -69,9 +69,9 @@ func newInitCommand(c *clig.Ctx) *cobra.Command {
 
 			run := func(ctx context.Context, name string, args ...string) error {
 				cmd := c.Exec.CommandContext(ctx, name, args...)
-				cmd.SetStdin(c.IO.In())
-				cmd.SetStdout(c.IO.Out())
-				cmd.SetStderr(c.IO.Err())
+				cmd.SetStdin(c.IO.In)
+				cmd.SetStdout(c.IO.Out)
+				cmd.SetStderr(c.IO.Err)
 				cmd.SetDir(root.String())
 				zap.L().Debug("exec command", zap.String("cmd", name), zap.Strings("args", args), zap.Stringer("dir", root))
 				return cmd.Run()
@@ -239,7 +239,7 @@ import (
 
 type Ctx struct {
 	WorkingDir clib.Path
-	IO         clib.IO
+	IO         *clib.IO
 	FS         afero.Fs
 	{{- if .ViperEnabled}}
 	Viper      *viper.Viper
@@ -327,7 +327,7 @@ func New{{ToCamel .Name}}Command(ctx *{{.Name}}.Ctx) *cobra.Command {
 		},
 	}
 
-	clib.SetIO(ctx.IO)
+	clib.SetIO(cmd, ctx.IO)
 	clib.AddLoggingFlags(cmd)
 
 	cmd.AddCommand(

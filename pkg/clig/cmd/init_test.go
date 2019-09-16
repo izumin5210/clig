@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"errors"
 	"os"
 	"reflect"
@@ -8,7 +9,6 @@ import (
 
 	"github.com/bradleyjkemp/cupaloy"
 	"github.com/izumin5210/clig/pkg/clib"
-	clibtesting "github.com/izumin5210/clig/pkg/clib/testing"
 	"github.com/spf13/afero"
 	"k8s.io/utils/exec"
 	exectesting "k8s.io/utils/exec/testing"
@@ -140,9 +140,10 @@ func TestInit(t *testing.T) {
 				})
 			}
 
+			io := clib.NewIO(new(bytes.Buffer), new(bytes.Buffer), new(bytes.Buffer))
 			ctx := &clig.Ctx{
 				WorkingDir: wd,
-				IO:         clibtesting.NewFakeIO(),
+				IO:         io,
 				FS:         fs,
 				Exec:       fexec,
 			}
