@@ -10,7 +10,7 @@ import (
 
 const (
 	appName = "clig"
-	version = "v0.2.0"
+	version = "v0.3.0"
 )
 
 var (
