@@ -3,7 +3,7 @@ module github.com/izumin5210/clig
 go 1.13
 
 require (
-	github.com/bradleyjkemp/cupaloy v2.3.0+incompatible
+	github.com/bradleyjkemp/cupaloy/v2 v2.5.0
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7
 	github.com/mattn/go-colorable v0.0.9
 	github.com/mattn/go-isatty v0.0.4 // indirect

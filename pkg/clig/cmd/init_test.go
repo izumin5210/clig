@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/bradleyjkemp/cupaloy"
+	"github.com/bradleyjkemp/cupaloy/v2"
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/afero"
 	"k8s.io/utils/exec"
