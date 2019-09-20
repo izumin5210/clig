@@ -5,6 +5,3 @@
 package tools
 
 // tool dependencies
-import (
-	_ "github.com/mitchellh/gox"
-)
